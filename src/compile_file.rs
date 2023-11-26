@@ -35,10 +35,11 @@ fn compile(code_lines: Vec<String>) {
 
     println!("Starting code added."); // Unecisary code to make me look cool in front of noobs
 
-    let mut variables: Vec<String> = Vec::new();
+    let mut iter = 1;
+    println!("Iter created.");
 
     for line in code_lines {
-        let token_code = tokenize(line);
+        let token_code = tokenize(line.clone());
 
         if token_code[0] == "print" {
 
@@ -47,7 +48,7 @@ fn compile(code_lines: Vec<String>) {
                     let mut print = String::from(""); // To keep track of spaces in code because of tokenazation
                     let mut iteration = 0;
 
-                    for i in token_code {
+                    for i in &token_code {
                         iteration += 1;
 
                         if iteration >= 4 {
@@ -66,7 +67,13 @@ fn compile(code_lines: Vec<String>) {
                 }
             }
 
-            if token_code  // left off at line 62 of python file
+            if token_code[1] == "variable" {
+                ouput_code += "println!(v{}.as_str)";
+                println!("ouput_code updated; print (var)");
+                println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being not string.", iter, line);
+            }
         }
+
+        iter += 1;  // Just the iter. Idk why I made a comment
     }
 }
