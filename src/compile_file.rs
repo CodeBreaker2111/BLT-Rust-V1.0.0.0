@@ -51,12 +51,25 @@ fn compile(code_lines: Vec<String>, output_path: String) {
     let mut iter = 1;
     println!("Iter created.");
 
+    let mut variable_list: Vec<String> = vec![String::from("")];
+    println!("Variable list created.");
+
     for line in code_lines {
         let token_code = tokenize(line.clone());
 
-        ouput_code = commands::print(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone());  // 'ouput code =' not '+=' because print function does +=
-        ouput_code = commands::wait(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone());
-        ouput_code = commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone());
+        ouput_code = commands::print(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone());  // 'ouput code =' not '+=' because print function does +=
+        ouput_code = commands::wait(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone());
+        ouput_code = (commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).0;
+        ouput_code = (commands::file_end(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone())).0;
+
+        if (commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).2 {
+            variable_list.push((commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).1);
+            println!("Variable list updated.");
+        }
+
+        if (commands::file_end(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone())).1 {
+            break;
+        }
 
         iter += 1;  // Just the iter. Idk why I made a comment
     }

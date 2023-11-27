@@ -1,0 +1,7 @@
+;var not-exists str!=string animal dog
+;var not-exists int/num seconds 5000
+;wait var milli_seconds
+;print var famous_qoute
+
+;var not-exists string #breed tabby cat
+;var exists string type american shorthair

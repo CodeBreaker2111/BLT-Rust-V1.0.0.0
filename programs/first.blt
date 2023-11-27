@@ -1,4 +1,6 @@
 ;print string null Hello world!
+
 ;wait 2000 ms
-;print string null it me.
-;var not-exists string Hello big city!!!
+
+;var not-exists string -@#/\$%^;:"'[]{},.?=+*()`~ cat
+;print var null animal

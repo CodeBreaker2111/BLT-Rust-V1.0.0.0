@@ -1,4 +1,4 @@
-pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: String) -> String {
+pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: String, variables: Vec<String>) -> String {
     let mut ouput_code_clone = ouput_code.clone();
     
     if token_code[0] == "print" {
@@ -16,7 +16,7 @@ pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: Strin
                     }
                 }
 
-                ouput_code_clone += format!("println!(\"{}\");", print).as_str();  // as str cause format returns String
+                ouput_code_clone += format!("println!(\"{}\");", print.trim_start()).as_str();  // as str cause format returns String
                 println!("ouput_code updated; print")
             }
             else {
@@ -28,16 +28,23 @@ pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: Strin
         }
 
         if token_code[1] == "var" {
-            ouput_code_clone += "println!(v{}.as_str)";
+            ouput_code_clone += format!("println!(v{}.as_str)", token_code[2]).as_str();
             println!("ouput_code updated; print (var)");
             println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being not string.", iter.to_string(), line);
+
+            // Error check
+
+            if !variables.contains(&token_code[2]) {
+                eprintln!("\n\nERROR line {} :\n'{}' The variable '{}' does not exist.\nAborting compile...", iter, line, token_code[2]);
+                std::process::exit(1);
+            }
         }
     }
 
     return ouput_code_clone;
 }
 
-pub fn wait(token_code: Vec<String>, ouput_code: String, iter: i32, line: String) -> String {
+pub fn wait(token_code: Vec<String>, ouput_code: String, iter: i32, line: String, variables: Vec<String>) -> String {
     let mut ouput_code_clone = ouput_code.clone();
     
     if token_code[0] == "wait" {
@@ -50,31 +57,80 @@ pub fn wait(token_code: Vec<String>, ouput_code: String, iter: i32, line: String
             ouput_code_clone += format!("thread::sleep_ms(v{});", token_code[2]).as_str();
             println!("ouput_code updated; wait (var)");
             println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or not being int.", iter.to_string(), line);
+
+            // Error check
+
+            if !variables.contains(&token_code[2]) {
+                eprintln!("\n\nERROR line {} :\n'{}' The variable '{}' does not exist.\nAborting compile...", iter, line, token_code[2]);
+                std::process::exit(1);
+            }
         }
     }
 
     return ouput_code_clone;
 }
 
-pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: String) -> String {
+pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: String, variables: Vec<String>) -> (String, String, bool) {
     let mut ouput_code_clone = ouput_code.clone();
+    let mut variable_created_bool = false;
+    let mut variable_created = String::from("");
 
     if token_code[0] == "var" {
         if token_code[2] == "int" {
             if token_code[1] == "not-exists" {
                 ouput_code_clone += format!("let mut v{} = {};", token_code[3], token_code[4]).as_str();
                 println!("ouput_code updated; var (not-exists)");
+
+                variable_created_bool = true;
+                variable_created = token_code[3].clone();
+
+                // Not allowed: !  -  @  #  /  \  $  %  ^  ;  :  "  '  [  ]  {  }  ,  .  ?  =  +  *  (  )  `  ~
+
+                if token_code[3].as_str().contains('!') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : !\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('-') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : -\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('@') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : @\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('#') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : #\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('/') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : /\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('\\') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : \\\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('$') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : $\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('%') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : %\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('^') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ^\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(';') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ;\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(':') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : :\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('"') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : \"\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('\'') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : '\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('[') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : [\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(']') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ]\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('{') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : {{\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('}') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : }}\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(',') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ,\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('.') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : .\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('?') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ?\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('=') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : =\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('+') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : +\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('*') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : *\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('(') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : (\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(')') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : )\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('`') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : `\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('~') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ~\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
             }
 
             if token_code[1] == "exists" {
                 ouput_code_clone += format!("v{} = {}", token_code[3], token_code[4]).as_str();
                 println!("ouput_code updated; var (exists)");
                 println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being wrong type", iter.to_string(), line);
+
+                // Error check
+
+                if !variables.contains(&token_code[3]) {
+                    eprintln!("\n\nERROR line {} :\n'{}' Variable {} does not exist.\nAborting compile...", iter, line, token_code[3]);
+                    std::process::exit(1);
+                }
             }
         }
 
         if token_code[2] == "string" {
-            if token_code.len() > 5 {
+            if token_code.len() > 6 {
 
                 let mut var_string = String::from("");  // Current variable; finding value of string due to tokenazation spliting up string
                 let mut iteration = 0;
@@ -83,24 +139,124 @@ pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
                 for i in &token_code {
                     iteration += 1;
 
-                    if iteration >= 5 {
-                        var_string += " "; var_string += i.as_str();
+                    if iteration >= 6 {
+                        var_string += " "; var_string += i;
                     }
                 }
 
                 if token_code[1] == "not-exists" {
+                    ouput_code_clone += format!("let mut v{} = {};", token_code[3], var_string).as_str();
+                    println!("ouput_code updated; var (not-exists)");
+
+                    variable_created_bool = true;
+                    variable_created = token_code[3].clone();
+
+                    if token_code[3].as_str().contains('!') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : !\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('-') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : -\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('@') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : @\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('#') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : #\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('/') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : /\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('\\') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : \\\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('$') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : $\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('%') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : %\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('^') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ^\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(';') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ;\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(':') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : :\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('"') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : \"\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('\'') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : '\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('[') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : [\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(']') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ]\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('{') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : {{\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('}') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : }}\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(',') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ,\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('.') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : .\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('?') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ?\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('=') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : =\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('+') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : +\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('*') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : *\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('(') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : (\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(')') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : )\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('`') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : `\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('~') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ~\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+
+                }
+    
+                if token_code[1] == "exists" {
+                    ouput_code_clone += format!("v{} = {}", token_code[3], var_string).as_str();
+                    println!("ouput_code updated; var (exists)");
+                    println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being wrong type", iter.to_string(), line);
+
+                    // Error check
+
+                    if !variables.contains(&token_code[3]) {
+                        eprintln!("\n\nERROR line {} :\n'{}' Variable {} does not exist.\nAborting compile...", iter, line, token_code[3]);
+                        std::process::exit(1);
+                    }
+                }
+            }
+
+            else {
+                if token_code[1] == "not-exists" {
                     ouput_code_clone += format!("let mut v{} = {};", token_code[3], token_code[4]).as_str();
                     println!("ouput_code updated; var (not-exists)");
+
+                    variable_created_bool = true;
+                    variable_created = token_code[3].clone();
+
+                    if token_code[3].as_str().contains('!') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : !\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('-') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : -\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('@') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : @\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('#') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : #\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('/') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : /\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('\\') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : \\\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('$') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : $\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('%') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : %\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('^') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ^\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(';') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ;\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(':') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : :\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('"') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : \"\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('\'') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : '\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('[') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : [\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(']') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ]\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('{') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : {{\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('}') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : }}\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(',') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ,\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('.') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : .\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('?') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ?\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('=') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : =\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('+') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : +\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('*') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : *\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('(') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : (\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains(')') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : )\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('`') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : `\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
+                    if token_code[3].as_str().contains('~') { eprintln!("\n\nERROR line {}:\n'{}'\nThe variable : '{}' contains an illegal character : ~\nAborting compile...", iter, line, token_code[3]); std::process::exit(1); }
                 }
     
                 if token_code[1] == "exists" {
                     ouput_code_clone += format!("v{} = {}", token_code[3], token_code[4]).as_str();
                     println!("ouput_code updated; var (exists)");
                     println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being wrong type", iter.to_string(), line);
+
+                    // Error check
+
+                    if !variables.contains(&token_code[3]) {
+                        eprintln!("\n\nERROR line {} :\n'{}' The variable '{}' does not exist.\nAborting compile...", iter, line, token_code[3]);
+                        std::process::exit(1);
+                    }
                 }
             }
         }
     }
 
-    return ouput_code_clone;
+    return (ouput_code_clone, variable_created, variable_created_bool);
+}
+
+pub fn file_end(token_code: Vec<String>, ouput_code: String, iter: i32, line: String) -> (String, bool) {
+    if token_code[0] == "break" {
+        println!("file end detected line {} :\n'{}'\nouput_code updated; file-end", iter, line);
+        return (ouput_code + "}", true);
+    }
+    else {
+        return (ouput_code, false)
+    }
 }
