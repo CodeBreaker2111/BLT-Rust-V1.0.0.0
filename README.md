@@ -1,4 +1,4 @@
-# BLT-Rust-V1.0.0.2
+# BLT-Rust-V1.0.0.3
 
 Original BLT: https://github.com/CodeBreaker2111/BLT-2.0
 
@@ -10,7 +10,7 @@ Original BLT: https://github.com/CodeBreaker2111/BLT-2.0
 
 #### Basic stuff
 
-The BLT has 9 main commands:    These commands are from the original BLT and will be added but right now, as of BLT 1.0.0.2, only the print command is fully added.
+The BLT has 9 main commands:    These commands are from the original BLT and will be added but right now, as of BLT 1.0.0.3, only the print, var, and wait commands are fully added.
 
 1. print: prints text to screen can be variable too
 2. var: stores data including user input

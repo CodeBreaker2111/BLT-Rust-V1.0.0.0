@@ -1,6 +1,7 @@
 mod acceseories;
 mod ui;
 mod compile_file;
+mod commands;
 
 use crate::ui::main as userInterface;
 use crate::compile_file::main as compileCode;
