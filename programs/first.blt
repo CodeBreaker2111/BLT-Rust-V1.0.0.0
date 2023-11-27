@@ -2,5 +2,5 @@
 
 ;wait 2000 ms
 
-;var not-exists string -@#/\$%^;:"'[]{},.?=+*()`~ cat
-;print var null animal
+;var not-exists string animal cat
+;print var animal null

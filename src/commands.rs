@@ -21,8 +21,12 @@ pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: Strin
             }
             else {
                 if token_code[3] == "\n" {
-                    ouput_code_clone += "println(\"\");";
+                    ouput_code_clone += "println!(\"\");";
                     println!("ouput_code updated; print (\\n)");
+                }
+
+                else {
+                    ouput_code_clone += format!("println!(\"{}\")", token_code[3]).as_str();
                 }
             }
         }

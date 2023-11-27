@@ -74,5 +74,5 @@ fn compile(code_lines: Vec<String>, output_path: String) {
         iter += 1;  // Just the iter. Idk why I made a comment
     }
 
-    println!("{}", ouput_code);
+    println!("\n\n\nResulting rust code:\n\n{}\n\nUnfortunatly, the BLT 1.0.1.4 does not compile to machine code yet just rust. The reason for that is that I am rewriting the original BLT (https://github.com/CodeBreaker2111/BLT-2.0) and I am not there yet. But you can always compile the code yourself.", ouput_code);
 }
