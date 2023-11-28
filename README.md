@@ -22,7 +22,7 @@ The BLT has 9 main commands:    These commands are from the original BLT and wil
 8. divide: divides two numbers and writes the result to a variable
 9. if: Does basic logic with two objects like equal to or greater than
 
-This next program here (example.blt) explains some stuff in the comments:
+This next program here explains some stuff in the comments:
 
 ```Lines without a semicolon at the beggining are comments. Place a semicolon at the beggining to make a line of code.
 
@@ -110,6 +110,7 @@ This doesn't do much because it is at the end of the program, but break ends the
 3. Each command has a lot of attributes and most stuff is not automatick.
 4. Sometimes attributes end up just being placeholders which are all the 'nulls' but can be anything you want.
 5. The BLT is VERY hard to read and I will fix that soon.
+6. If the program does not end in a newline, the last line will not be run.
 
 #### UI
 
