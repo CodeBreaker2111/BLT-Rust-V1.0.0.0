@@ -26,13 +26,13 @@ pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: Strin
                 }
 
                 else {
-                    ouput_code_clone += format!("println!(\"{}\")", token_code[3]).as_str();
+                    ouput_code_clone += format!("println!(\"{}\");", token_code[3]).as_str();
                 }
             }
         }
 
         if token_code[1] == "var" {
-            ouput_code_clone += format!("println!(v{}.as_str)", token_code[2]).as_str();
+            ouput_code_clone += format!("println!(\"{{}}\", v{}.as_str());", token_code[2]).as_str();
             println!("ouput_code updated; print (var)");
             println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being not string.", iter.to_string(), line);
 
@@ -149,7 +149,7 @@ pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
                 }
 
                 if token_code[1] == "not-exists" {
-                    ouput_code_clone += format!("let mut v{} = {};", token_code[3], var_string).as_str();
+                    ouput_code_clone += format!("let mut v{} = String::from(\"{}\");", token_code[3], var_string).as_str();
                     println!("ouput_code updated; var (not-exists)");
 
                     variable_created_bool = true;
@@ -186,7 +186,7 @@ pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
                 }
     
                 if token_code[1] == "exists" {
-                    ouput_code_clone += format!("v{} = {}", token_code[3], var_string).as_str();
+                    ouput_code_clone += format!("v{} = String::from(\"{}\")", token_code[3], var_string).as_str();
                     println!("ouput_code updated; var (exists)");
                     println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being wrong type", iter.to_string(), line);
 
@@ -201,7 +201,7 @@ pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
 
             else {
                 if token_code[1] == "not-exists" {
-                    ouput_code_clone += format!("let mut v{} = {};", token_code[3], token_code[4]).as_str();
+                    ouput_code_clone += format!("let mut v{} = String::from(\"{}\");", token_code[3], token_code[4]).as_str();
                     println!("ouput_code updated; var (not-exists)");
 
                     variable_created_bool = true;
@@ -256,7 +256,7 @@ pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
 }
 
 pub fn file_end(token_code: Vec<String>, ouput_code: String, iter: i32, line: String) -> (String, bool) {
-    if token_code[0] == "break" {
+    if token_code[0] == "break" || token_code[0] == "}" {
         println!("file end detected line {} :\n'{}'\nouput_code updated; file-end", iter, line);
         return (ouput_code + "}", true);
     }

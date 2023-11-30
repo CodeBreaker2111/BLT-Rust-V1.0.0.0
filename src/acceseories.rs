@@ -30,7 +30,7 @@ pub fn full_file_read(input_path: &String) -> String {
         Err(err) => {
             // Handle the error here if needed
             eprintln!("Failed to read file {}: {}", input_path, err);
-            return String::from("");
+            std::process::exit(1);
         }
     };
 

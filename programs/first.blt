@@ -4,3 +4,4 @@
 
 ;var not-exists string animal cat
 ;print var animal null
+;}
