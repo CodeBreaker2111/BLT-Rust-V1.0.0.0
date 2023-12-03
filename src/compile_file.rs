@@ -1,4 +1,6 @@
 use crate::acceseories::full_file_read as read_file;  // Must be a reference of a string for a path.
+use crate::acceseories::full_file_write as create_file;
+use crate::acceseories::run_bash_command as shell_command;
 use crate::commands as commands;
 
 pub fn main(input_path: String, output_path: String) {
@@ -74,5 +76,10 @@ fn compile(code_lines: Vec<String>, output_path: String) {
         iter += 1;  // Just the iter. Idk why I made a comment
     }
 
-    println!("\n\n\nResulting rust code:\n\n{}\n\nUnfortunatly, the BLT 1.0.1.4 does not compile to machine code yet just rust. The reason for that is that I am rewriting the original BLT (https://github.com/CodeBreaker2111/BLT-2.0) and I am not there yet. But you can always compile the code yourself.", ouput_code);
+    println!("\n\n\nResulting rust code:\n\n{}", ouput_code);
+
+    println!("Creating cache rust file...");
+
+    create_file(String::from("blt_cache.rs"), ouput_code);
+    shell_command(format!("rustc blt_cache.rs -o {}", output_path));
 }

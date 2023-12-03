@@ -1,4 +1,7 @@
 use std::io;
+use std::fs::File;
+use std::io::prelude::*;
+use std::process::Command;
 
 pub fn get_input() -> String {
     let mut input = String::from("");
@@ -35,4 +38,22 @@ pub fn full_file_read(input_path: &String) -> String {
     };
 
     return contents;
+}
+
+fn file_write(path: String, contents: String) -> std::io::Result<()> {
+    let mut file = File::create(path.as_str())?;
+    file.write_all(contents.as_bytes())?;
+    Ok(())
+}
+
+pub fn full_file_write(path: String, contents: String) {
+    let _ = file_write(path, contents);
+}
+
+pub fn run_bash_command(command: String) {
+    let _ = Command::new("sh")
+        .arg("-c")
+        .arg(command)
+        .status()
+        .expect("Failed to execute command");
 }

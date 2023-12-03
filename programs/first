@@ -1,0 +1,7 @@
+;print string null Hello world!
+
+;wait 2000 ms
+
+;var not-exists string animal cat
+;print var animal null
+;}

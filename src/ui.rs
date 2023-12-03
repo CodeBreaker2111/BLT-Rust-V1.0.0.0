@@ -6,7 +6,7 @@ pub fn main() -> (String, String) {
     println!("What is the path to your file? : ");
     results.0 = get_input();
 
-    results.1 = format!("{}.exe", results.0);
+    results.1 = format!("{}", results.0.strip_suffix(".blt").unwrap_or("code"));
 
     return results;
 }
