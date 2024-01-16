@@ -109,7 +109,7 @@ This doesn't do much because it is at the end of the program, but break ends the
 2. Lines do not end with semicolon.
 3. Each command has a lot of attributes and most stuff is not automatick.
 4. Sometimes attributes end up just being placeholders which are all the 'nulls' but can be anything you want.
-5. The BLT is VERY hard to read and I will fix that soon.
+5. The BLT is VERY hard to read and I will fix that soon (It's getting slightly better).
 6. If the program does not end in a newline, the last line will not be run.
 
 #### UI
