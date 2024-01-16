@@ -2,6 +2,9 @@
 
 ;wait 2000 ms
 
-;var not-exists string animal cat
+;var string animal cat
+;print var animal null
+
+;var string animal dog
 ;print var animal null
 ;}
