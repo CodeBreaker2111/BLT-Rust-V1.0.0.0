@@ -28,7 +28,7 @@ This next program here explains some stuff in the comments:
 
 Lines without a semicolon at the beggining are comments. Place a semicolon at the beggining to make a line of code.
 
-var says it's a variable, first attribute: i32, is the type, second attribute: var1 var2, is the variable, and the third attribute: 2 1, is the value
+var says it's a variable, first attribute: u32, is the type, second attribute: var1 var2, is the variable, and the third attribute: 2 1, is the value
 ;var u32 var1 2000
 ;var u32 var2 1000
 
