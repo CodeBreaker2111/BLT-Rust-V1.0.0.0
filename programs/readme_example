@@ -1,0 +1,48 @@
+Lines without a semicolon at the beggining are comments. Place a semicolon at the beggining to make a line of code.
+
+var says it's a variable, first attribute: i32, is the type, second attribute: var1 var2, is the variable, and the third attribute: 2 1, is the value
+;var u32 var1 2000
+;var u32 var2 1000
+
+first attribute: string means the value is a string.
+;var string var3 Hello World!
+
+print says to print to the screen, first attribute: string says the value is not a variable but a string, and last attribute: Hello cute Chelsea! is the value.
+;print string Hello cute Chelsea!
+
+wait says to wait time, first attribute: var says the value is a variable, and last attribute: var1 is the variable: 2000, and will wait 2000 milliseconds
+;wait var var1
+;print string Hello cute Rizo!
+
+;print string \n
+;wait var var2
+
+first attribute: variable says it is a variable, and last attribute: 2 is the variable: Hello World!
+;print var var3
+
+the second attribute: var3 is the variable to change: Hello World!
+;var string var3 Hello Big City!
+;print var var3
+
+;print string Please type something
+
+;var f32 var5 0.0
+
+add says to use addition the first and third attributes: int say that both of the numbers are not variables, the second and fourth attributes: 50 are the values of the numbers, and the last attribute: var5 is the variable to write the answer to.
+;add int 50.0 int 50.0 var5
+;print var var5
+
+subtract says to use subtraction
+;subtract int 678.0 int 159.0 var5
+;print var var5
+
+multiply says to use multiplication
+;multiply int 50.0 int 50.0 var5
+;print var var5
+
+divide says to use division
+;divide int 50.0 int 50.0 var5
+;print variable to-string 4
+
+This doesn't do much because it is at the end of the program, but '}' or 'break' ends the program.
+;}
