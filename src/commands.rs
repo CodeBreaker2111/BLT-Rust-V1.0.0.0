@@ -4,14 +4,14 @@ pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: Strin
     if token_code[0] == "print" {
 
         if token_code[1] == "string" {
-            if token_code.len() > 4 {
+            if token_code.len() > 3 {
                 let mut print = String::from(""); // To keep track of spaces in code because of tokenazation
                 let mut iteration = 0;
 
                 for i in &token_code {
                     iteration += 1;
 
-                    if iteration >= 4 {
+                    if iteration >= 3 {
                         print = print + " " + &i;
                     }
                 }
@@ -32,7 +32,7 @@ pub fn print(token_code: Vec<String>, ouput_code: String, iter: i32, line: Strin
         }
 
         if token_code[1] == "var" {
-            ouput_code_clone += format!("println!(\"{{}}\", v{}.as_str());", token_code[2]).as_str();
+            ouput_code_clone += format!("println!(\"{{}}\", v{}.to_string().as_str());", token_code[2]).as_str();
             println!("ouput_code updated; print (var)");
             println!("Warning line {} :\n'{}' Code may not compile due to variable not existing or being not string.", iter.to_string(), line);
 
@@ -85,9 +85,11 @@ pub fn variable(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
             exists = true;
         }
 
-        if token_code[2] == "int" {
+        let mut var_type = token_code[1].clone();
+
+        if var_type != "string" {
             if !exists {
-                ouput_code_clone += format!("let mut v{} = {};", token_code[2], token_code[3]).as_str();
+                ouput_code_clone += format!("let mut v{}: {} = {};", token_code[2], var_type, token_code[3]).as_str();
                 println!("ouput_code updated; var (not-exists)");
 
                 variable_created_bool = true;
@@ -270,16 +272,16 @@ pub fn file_end(token_code: Vec<String>, ouput_code: String, iter: i32, line: St
     }
 }
 
-pub fn add(token_code: Vec<String>, ouput_code: String, iter: i32, line: String) -> (String, bool) {
+pub fn add(token_code: Vec<String>, ouput_code: String) -> String {
     let mut ouput_code_clone = ouput_code.clone();
     
     if token_code[0] == "add" {
-        ouput_code_clone = ouput_code_clone + format!("let mut v{} =", token_code[5]).as_str();
+        ouput_code_clone = ouput_code_clone + format!("v{} = ", token_code[5]).as_str();
 
         if token_code[1] == "int" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
         }
-        if token_code[1] == "variable" {
+        if token_code[1] == "var" {
             ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[2]).as_str();
         }
 
@@ -288,10 +290,96 @@ pub fn add(token_code: Vec<String>, ouput_code: String, iter: i32, line: String)
         if token_code[3] == "int" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
         }
-        if token_code[3] == "variable" {
+        if token_code[3] == "var" {
             ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[4]).as_str();
         }
+
+        ouput_code_clone = ouput_code_clone + ";";
     }
 
-    return (ouput_code_clone, false);
+    return ouput_code_clone;
+}
+
+pub fn subtract(token_code: Vec<String>, ouput_code: String) -> String {
+    let mut ouput_code_clone = ouput_code.clone();
+    
+    if token_code[0] == "subtract" {
+        ouput_code_clone = ouput_code_clone + format!("v{} =", token_code[5]).as_str();
+
+        if token_code[1] == "int" {
+            ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
+        }
+        if token_code[1] == "var" {
+            ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[2]).as_str();
+        }
+
+        ouput_code_clone = ouput_code_clone + " -";
+
+        if token_code[3] == "int" {
+            ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
+        }
+        if token_code[3] == "var" {
+            ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[4]).as_str();
+        }
+
+        ouput_code_clone = ouput_code_clone + ";";
+    }
+
+    return ouput_code_clone;
+}
+
+pub fn multiply(token_code: Vec<String>, ouput_code: String) -> String {
+    let mut ouput_code_clone = ouput_code.clone();
+    
+    if token_code[0] == "multiply" {
+        ouput_code_clone = ouput_code_clone + format!("v{} =", token_code[5]).as_str();
+
+        if token_code[1] == "int" {
+            ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
+        }
+        if token_code[1] == "var" {
+            ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[2]).as_str();
+        }
+
+        ouput_code_clone = ouput_code_clone + " *";
+
+        if token_code[3] == "int" {
+            ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
+        }
+        if token_code[3] == "var" {
+            ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[4]).as_str();
+        }
+
+        ouput_code_clone = ouput_code_clone + ";";
+    }
+
+    return ouput_code_clone;
+}
+
+pub fn divide(token_code: Vec<String>, ouput_code: String) -> String {
+    let mut ouput_code_clone = ouput_code.clone();
+    
+    if token_code[0] == "divide" {
+        ouput_code_clone = ouput_code_clone + format!("v{} =", token_code[5]).as_str();
+
+        if token_code[1] == "int" {
+            ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
+        }
+        if token_code[1] == "var" {
+            ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[2]).as_str();
+        }
+
+        ouput_code_clone = ouput_code_clone + " /";
+
+        if token_code[3] == "int" {
+            ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
+        }
+        if token_code[3] == "var" {
+            ouput_code_clone = ouput_code_clone + format!(" v{}", token_code[4]).as_str();
+        }
+
+        ouput_code_clone = ouput_code_clone + ";";
+    }
+
+    return ouput_code_clone;
 }

@@ -63,6 +63,10 @@ fn compile(code_lines: Vec<String>, output_path: String) {
         ouput_code = commands::wait(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone());
         ouput_code = (commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).0;
         ouput_code = (commands::file_end(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone())).0;
+        ouput_code = commands::add(token_code.clone(), ouput_code.clone());
+        ouput_code = commands::subtract(token_code.clone(), ouput_code.clone());
+        ouput_code = commands::multiply(token_code.clone(), ouput_code.clone());
+        ouput_code = commands::divide(token_code.clone(), ouput_code.clone());
 
         if (commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).2 {
             variable_list.push((commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).1);
