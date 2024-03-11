@@ -13,10 +13,10 @@
 ;var i16 num3 0
 ;var f32 num4 0.0
 
-;add int 12 int 4 num1
-;subtract int 32 int 2 num2
-;multiply int 48 int 10 num3
-;divide int 6.0 int 14.0 num4
+;add num 8 var num1 num1
+;subtract num 32 num 2 num2
+;multiply num 48 num 10 num3
+;divide num 6.0 num 14.0 num4
 
 ;print string 12 + 4 =
 ;print var num1
@@ -29,4 +29,13 @@
 
 ;print string 6 / 14 =
 ;print var num4
+
+;var string user_input 0
+
+;print string Please type something
+;readln user_input
+
+;print string You typed...
+;wait 500 ms
+;print var user_input
 ;}

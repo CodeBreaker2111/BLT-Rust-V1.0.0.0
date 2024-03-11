@@ -44,7 +44,7 @@ fn tokenize(line: String) -> Vec<String> {
 
 fn compile(code_lines: Vec<String>, output_path: String) {
     let mut ouput_code = String::from("");
-    ouput_code += "use std::io;use std::thread;pub fn main(){";
+    ouput_code += "use std::io;use std::thread;pub fn get_input() -> String {let mut input = String::from(\"\");io::stdin().read_line(&mut input).expect(\"Failed to read line\");return input;}pub fn main(){";
 
     println!("Ouput file : {}", output_path);
 
@@ -67,6 +67,7 @@ fn compile(code_lines: Vec<String>, output_path: String) {
         ouput_code = commands::subtract(token_code.clone(), ouput_code.clone());
         ouput_code = commands::multiply(token_code.clone(), ouput_code.clone());
         ouput_code = commands::divide(token_code.clone(), ouput_code.clone());
+        ouput_code = commands::readln(token_code.clone(), ouput_code.clone());
 
         if (commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).2 {
             variable_list.push((commands::variable(token_code.clone(), ouput_code.clone(), iter.clone(), line.clone(), variable_list.clone())).1);

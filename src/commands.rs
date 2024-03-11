@@ -278,7 +278,7 @@ pub fn add(token_code: Vec<String>, ouput_code: String) -> String {
     if token_code[0] == "add" {
         ouput_code_clone = ouput_code_clone + format!("v{} = ", token_code[5]).as_str();
 
-        if token_code[1] == "int" {
+        if token_code[1] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
         }
         if token_code[1] == "var" {
@@ -287,7 +287,7 @@ pub fn add(token_code: Vec<String>, ouput_code: String) -> String {
 
         ouput_code_clone = ouput_code_clone + " +";
 
-        if token_code[3] == "int" {
+        if token_code[3] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
         }
         if token_code[3] == "var" {
@@ -306,7 +306,7 @@ pub fn subtract(token_code: Vec<String>, ouput_code: String) -> String {
     if token_code[0] == "subtract" {
         ouput_code_clone = ouput_code_clone + format!("v{} =", token_code[5]).as_str();
 
-        if token_code[1] == "int" {
+        if token_code[1] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
         }
         if token_code[1] == "var" {
@@ -315,7 +315,7 @@ pub fn subtract(token_code: Vec<String>, ouput_code: String) -> String {
 
         ouput_code_clone = ouput_code_clone + " -";
 
-        if token_code[3] == "int" {
+        if token_code[3] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
         }
         if token_code[3] == "var" {
@@ -334,7 +334,7 @@ pub fn multiply(token_code: Vec<String>, ouput_code: String) -> String {
     if token_code[0] == "multiply" {
         ouput_code_clone = ouput_code_clone + format!("v{} =", token_code[5]).as_str();
 
-        if token_code[1] == "int" {
+        if token_code[1] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
         }
         if token_code[1] == "var" {
@@ -343,7 +343,7 @@ pub fn multiply(token_code: Vec<String>, ouput_code: String) -> String {
 
         ouput_code_clone = ouput_code_clone + " *";
 
-        if token_code[3] == "int" {
+        if token_code[3] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
         }
         if token_code[3] == "var" {
@@ -362,7 +362,7 @@ pub fn divide(token_code: Vec<String>, ouput_code: String) -> String {
     if token_code[0] == "divide" {
         ouput_code_clone = ouput_code_clone + format!("v{} =", token_code[5]).as_str();
 
-        if token_code[1] == "int" {
+        if token_code[1] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[2]).as_str();
         }
         if token_code[1] == "var" {
@@ -371,7 +371,7 @@ pub fn divide(token_code: Vec<String>, ouput_code: String) -> String {
 
         ouput_code_clone = ouput_code_clone + " /";
 
-        if token_code[3] == "int" {
+        if token_code[3] == "num" {
             ouput_code_clone = ouput_code_clone + format!(" {}", token_code[4]).as_str();
         }
         if token_code[3] == "var" {
@@ -379,6 +379,16 @@ pub fn divide(token_code: Vec<String>, ouput_code: String) -> String {
         }
 
         ouput_code_clone = ouput_code_clone + ";";
+    }
+
+    return ouput_code_clone;
+}
+
+pub fn readln(token_code: Vec<String>, ouput_code: String) -> String {
+    let mut ouput_code_clone = ouput_code.clone();
+
+    if token_code[0] == "readln" {
+        ouput_code_clone = ouput_code_clone + format!("v{} = get_input();", token_code[1]).as_str();
     }
 
     return ouput_code_clone;

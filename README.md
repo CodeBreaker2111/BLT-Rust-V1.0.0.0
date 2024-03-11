@@ -1,4 +1,4 @@
-# BLT-Rust-V1.0.2.6
+# BLT-Rust-V1.4.7
 
 Original BLT: https://github.com/CodeBreaker2111/BLT-2.0
 
@@ -57,20 +57,27 @@ the second attribute: var3 is the variable to change: Hello World!
 ;var f32 var5 0.0
 
 add says to use addition the first and third attributes: int say that both of the numbers are not variables, the second and fourth attributes: 50 are the values of the numbers, and the last attribute: var5 is the variable to write the answer to.
-;add int 50.0 int 50.0 var5
+;add num 50.0 num 50.0 var5
 ;print var var5
 
 subtract says to use subtraction
-;subtract int 678.0 int 159.0 var5
+;subtract num 678.0 num 159.0 var5
 ;print var var5
 
 multiply says to use multiplication
-;multiply int 50.0 int 50.0 var5
+;multiply num 50.0 num 50.0 var5
 ;print var var5
 
 divide says to use division
-;divide int 50.0 int 50.0 var5
+;divide num 50.0 num 50.0 var5
 ;print variable to-string 4
+
+;var string user_input null
+
+;print string Please type something
+
+readln says to get user input, and the first attribute: user_input, is the variable to write to.
+;readln user_input
 
 This doesn't do much because it is at the end of the program, but '}' or 'break' ends the program.
 ;}
