@@ -21,6 +21,7 @@ The BLT has 9 main commands:    These commands are from the original BLT and wil
 7. multiply: multiplies two numbers and writes the result to a variable
 8. divide: divides two numbers and writes the result to a variable
 9. if: Does basic logic with two objects like equal to or greater than
+10. readln: manages basic user input in the terminal
 
 This next program here explains some stuff in the comments:
 
